@@ -1,0 +1,277 @@
+
+#map {
+  margin-top: 2%;
+  width: 80%;
+  margin-left: 10%;
+  height: 88vh;
+}
+.success {
+  text-align: center;
+  background-color: #23d160;
+  color: white;
+  width: 85%;
+  margin-left: 7.5%;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+.error {
+  text-align: center;
+  background-color: #ff3860;
+  color: white;
+  width: 85%;
+  margin-left: 7.5%;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+.invisible {
+  background-color: red;
+  width: 100%;
+  color: black;
+}
+
+.changeMode {
+  margin-top: 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.changeMode a {
+  background-color: #f5f5f5;
+  padding: 5px 10px;
+  font-size: 35px;
+}
+.changeMode a {
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+  color: white;
+}
+.changeMode a:hover {
+  background-color: #d9dadb;
+}
+.global {
+  width: 95%;
+  margin-left: 2.5%;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.member {
+  margin-top: 1%;
+  min-width: 250px;
+  background-color: #ff3860;
+  margin-bottom: 1%;
+  min-height: 300px;
+  border-radius: 12px;
+  margin: 1%;
+}
+@media (max-width: 650px) {
+  #map {
+    width: 100%;
+    margin-left: 0px;
+    height: 60vh;
+  }
+}
+#addMembersForm .btn {
+  float: right;
+}
+#addMembersForm {
+  width: 95%;
+  margin-left: 2.5%;
+  margin-top: 2%;
+}
+
+/* Popup Box */
+
+/* The Modal (background) */
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 8888;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 10vh auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 90%;
+  /* Could be more or less, depending on screen size */
+}
+
+@media (min-width: 1366px) {
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10vh auto;
+    /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    /* Could be more or less, depending on screen size */
+  }
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.globalMapMarkerPopup {
+  min-width: 350px;
+  max-width: 500px;
+}
+.globalMapMarkerPopup span {
+  display: inline-block;
+}
+.allLineInfo{
+  width: 98%;
+  margin-left: 1%;
+}
+.rightInfo{
+  width: 48%;
+  margin-left: 1%;
+  float: left;
+}
+.leftInfo{
+  width: 48%;
+  float: right;
+}
+
+
+/*PARTIE SUR LE FORMULAIRE DE RECHERCHE */
+.searchDiv{
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius:8px 8px 8px 8px;
+  justify-content: space-between;
+  margin-bottom: 2%;
+  border: 0.2px solid rgb(209, 209, 209);
+}
+  .searchTop{
+  width: 100%;
+  background-color: #2196f3;
+  text-align: center;
+  border-radius: 8px 8px 0px 0px;
+  padding: 10px;
+  color: white;
+}
+.searchForm{
+  width: 98%;
+  margin: 2% 0px 2% 1%;
+}
+.searchForm input[type="search"]{
+  height: 30px;
+  font-size: 17px;
+  float: left;
+  width: 89%;
+  border: none;
+  background: #f1f1f1;
+  outline: none;
+}
+.searchBarButton{
+  float: left;
+  width: 5%;
+  height: 30px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border-left: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 1%;
+  margin-bottom: 1%;
+
+}
+
+.advancedSearch{
+  width: 5%;
+  display: inline;
+  height:30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  background-color: #2196f3;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 1%;
+}
+.advanced{
+  display: none;
+  margin-bottom: 1%;
+  z-index: 2;
+  height: auto;
+  /* border: 1px solid lightgray; */
+  background-color: #eef0f2;
+}
+.sub-advanced{
+  padding: 20px;
+  /* background-color: red; */
+}
+.group{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2%;
+}
+.group div {
+  width: 33%;
+  height: 25px;
+}
+.group .groupDiv {
+  width: 48%;
+  height: 25px;
+}
+.group select{
+  width: 100%;
+  height: 100%;
+  outline: none;
+
+}
+.group input{
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+.inputgroup{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2%;
+}
+
+/*FIN DE LA SEARCH DIV*/
