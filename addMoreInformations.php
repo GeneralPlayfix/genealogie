@@ -5,18 +5,28 @@ require_once "./component/bdd.php";
 require_once "./functions/sql.php";
 $members = getMemberWithoutRelationshipInformations($dbh);
 if (isset($_POST['moreInformations'])) {
-    var_dump($_POST);
     if (!empty($_POST['parents']) or !empty($_POST['children']) or !empty($_POST['weddingPartner'])) {
         $memberId = $_POST['hiddenId'];
         $memberInformations = getMemberById($dbh, $memberId);
         $parents = "";
+        $oneParent = false;
         if (!empty($_POST['parents'])) {
             $tempParents = $_POST['parents'];
+            if(count($tempParents) == 1){
+                $oneParent = true;
+            }
+            if(count($tempParents) > 2){
+                return "error";
+            }
             foreach ($tempParents as $temp) {
-                if ($parents == "") {
-                    $parents = $temp;
-                } else {
-                    $parents .= "/" . $temp;
+                if($oneParent){
+                    $parents = $temp . "/" . "NA";
+                }else{
+                    if ($parents == "") {
+                        $parents = $temp;
+                    } else {
+                        $parents .= "/" . $temp;
+                    }
                 }
             }
         } else {
@@ -24,7 +34,6 @@ if (isset($_POST['moreInformations'])) {
                 $parents = $memberInformations['parents'];
             }
         }
-        echo $parents;
 
         $children = "";
         if (!empty($_POST['children'])) {
@@ -38,14 +47,10 @@ if (isset($_POST['moreInformations'])) {
                 }
             }
         } else {
-            echo "<br>";
             if ($memberInformations['children'] != "") {
                 $children = $memberInformations['children'];
             }
         }
-        echo '<br>';
-        echo $children;
-
         $weddingPartner = "";
         if (!empty($_POST['weddingPartner'])) {
             $weddingPartner = $_POST['weddingPartner'];
@@ -54,30 +59,16 @@ if (isset($_POST['moreInformations'])) {
                 $weddingPartner = $memberInformations['weddingpartner'];
             }
         }
-        echo '<br>';
-        echo $weddingPartner;
-
         updateMemberNewInformations($dbh, $memberId, $parents, $weddingPartner, $children);
+        header("Location:addMoreInformations.php");
     }
 }
 if(isset($_POST['moreInformationsNone'])){
     $memberId = $_POST['hiddenId'];
-    var_dump($_POST);
-    $memberInformations = getMemberById($dbh, $memberId);
-    $parents = "";
-    if($memberInformations['parents'] == "" OR $memberInformations['parents'] == null){
-        $parents = "N/A";
-    }
-    echo $parents;
-    $children = "";
-    if($memberInformations['children'] == "" OR $memberInformations['children'] == null){
-        $children = "N/A";
-    }
-    $weddingPartner = "";
-    if($memberInformations['weddingpartner'] == "" OR $memberInformations['weddingpartner'] == null){
-        $weddingPartner = "N/A";
-    }
-    updateMemberNewInformations($dbh, $memberId, $parents, $weddingPartner, $children);
+    $member = getMemberById($dbh, $memberId);
+    $final = 1;
+    updateMemberNewInformations($dbh, $memberId, $member['parents'], $member['weddingpartner'], $member['children'], $final);
+    header("Location:addMoreInformations.php");
 }
 ?>
 <h2>Il y a ci-dessous, l'ensemble des membres pour lesquels il manque les relations (mariage, parent, enfant)</h2>
