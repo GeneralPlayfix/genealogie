@@ -197,41 +197,39 @@ if (isset($_POST['modify']) && !empty($_POST['modify'])) {
                         if (!empty($townSearchResult)) {
                             $cityId = $townSearchResult['id'];
                             $contactDetails = "";
-                            if($cityId == $memberToModify['townId']){
+                            if ($cityId == $memberToModify['townId']) {
                                 $contactDetails = $memberToModify['contactdetails'];
-                            }else{
+                            } else {
                                 $lat = $townSearchResult['gps_lat'];
                                 $lng = $townSearchResult['gps_lng'];
-                                $contactDetails = $lat.", ".$lng;
+                                $contactDetails = $lat . ", " . $lng;
                                 $membersByCity = getMembersByCityId($dbh, $cityId);
-                                if(!empty($membersByCity)){
+                                if (!empty($membersByCity)) {
                                     $newContactDetails = "";
                                     $latBooleanPlus = Random();
                                     $longBooleanPlus = Random();
                                     $latValueToAdd = float_rand(0.002, 0.009);
                                     $longValueToAdd = float_rand(0.002, 0.009);
-                                     do{
-                                        if($latBooleanPlus){
-                                            $lat += $latValueToAdd; 
-                                        }else{
+                                    do {
+                                        if ($latBooleanPlus) {
+                                            $lat += $latValueToAdd;
+                                        } else {
                                             $lat -= $latValueToAdd;
                                         }
-                                        if($longBooleanPlus){
-                                            $lng += $longValueToAdd; 
-                                        }else{
-                                            $lng -= $longValueToAdd; 
+                                        if ($longBooleanPlus) {
+                                            $lng += $longValueToAdd;
+                                        } else {
+                                            $lng -= $longValueToAdd;
                                         }
-                                        $newContactDetails = $lat.", ".$lng;
+                                        $newContactDetails = $lat . ", " . $lng;
                                         $memberByContactDetails = getMemberByContactDetails($dbh, $newContactDetails);
-                                 }while($memberByContactDetails != 0);
-                                 $contactDetails = $newContactDetails;
-                                }     
+                                    } while ($memberByContactDetails != 0);
+                                    $contactDetails = $newContactDetails;
+                                }
                             }
-                            echo $lastName;
-                            echo $firstName;
                             updateMember($dbh, $firstName, $lastName, $birthDate, $birthPlace, $weddingDate, $weddingPlace, $generationNumber, $contactDetails, $deathDate, $deathPlace, $gender, $remarks, $cityId, $memberToModify['id']);
                             $msg = "Le membre $firstName $lastName à bien été modifié";
-                        }else{
+                        } else {
                             $err = "La ville rentrée n'existe pas !";
                         }
                     } else {
@@ -263,30 +261,30 @@ if (isset($_POST['modify']) && !empty($_POST['modify'])) {
     }
 </script>
 <?php
-    if (isset($err) || isset($msg)) {
-        if (isset($err)) {
-    ?>
-            <div class="col-md-12">
-                <p class="error"> <?php echo $err ?></p>
-            </div>
-        <?php
-        } else if (isset($msg)) {
-        ?>
-
-            <div class="col-md-12">
-                <p class="success"> <?php echo $msg ?>... Vous allez être redirigé dans <b>
-                        <script>
-                            count(5)
-                        </script>
-                    </b> secondes
-                </p>
-            </div>
-
+if (isset($err) || isset($msg)) {
+    if (isset($err)) {
+?>
+        <div class="col-md-12">
+            <p class="error"> <?php echo $err ?></p>
+        </div>
     <?php
-            header('Refresh: 5; URL=members.php');
-        }
-    }
+    } else if (isset($msg)) {
     ?>
+
+        <div class="col-md-12">
+            <p class="success"> <?php echo $msg ?>... Vous allez être redirigé dans <b>
+                    <script>
+                        count(5)
+                    </script>
+                </b> secondes
+            </p>
+        </div>
+
+<?php
+        header('Refresh: 5; URL=members.php');
+    }
+}
+?>
 <script src="js/dropdown.js"></script>
 <br>
 <div class="searchDiv">
@@ -459,13 +457,11 @@ $jsonArray = json_decode($json, true);
                                     if (strpos($member['parents'], "/") !== false) {
                                         $parentArray = explode("/", $member['parents']);
                                         foreach ($parentArray as $parent) {
-                                            if (is_numeric($parent)) {
-                                                $temp = getMemberById($dbh, $parent);
-                                                if ($temp['gender'] == "Homme") {
-                                                    $father = strtoupper($temp['lastname'] . " " . $temp['firstName']);
-                                                } else if ($temp['gender'] == "Femme") {
-                                                    $mother = strtoupper($temp['lastname'] . " " . $temp['firstName']);
-                                                }
+                                            $temp = getMemberById($dbh, $parent);
+                                            if ($temp['gender'] == "Homme") {
+                                                $father = strtoupper($temp['lastname'] . " " . $temp['firstname']);
+                                            } else if ($temp['gender'] == "Femme") {
+                                                $mother = strtoupper($temp['lastname'] . " " . $temp['firstname']);
                                             }
                                         }
                                     }
@@ -562,7 +558,7 @@ $jsonArray = json_decode($json, true);
                                     <?php
                                     if ($member['final']) {
                                     ?>
-                                        <input class="btn btn-success" type="submit" value="Activer le changement des relations" name="removeFromFinalList">
+                                        <input class="btn btn-success" type="submit" title="Cliquer ici pour réactiver la possibilité de mettre à jour es relations"value="Activer le changement des relations" name="removeFromFinalList">
 
                                     <?php
                                     }

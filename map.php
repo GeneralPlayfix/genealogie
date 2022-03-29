@@ -11,37 +11,37 @@ array_multisort($columns, SORT_ASC, $members);
 <?php
 $json = file_get_contents("test.json");
 $jsonArray = json_decode($json, true);
-   
+
 ?>
 <script>
     var json = {
-    "1":"blue",
-    "2":"cyan",
-    "3":"green",
-    "4":"pink",
-    "5":"orange",
-    "6":"red",
-    "7":"grey",
-    "8":"darkblue",
-    "9":"lightcoral",
-    "10":"purple",
-    "11":"black",
-    "12":"salmon",
-    "13":"darkgreen",
-    "14":"darkred",
-    "15":"lightblue",
-    "16":"darkpink",
-    "17":"lightgreen",
-    "18":"lightgrey",
-    "19":"white"
-}
+        "1": "blue",
+        "2": "cyan",
+        "3": "green",
+        "4": "pink",
+        "5": "orange",
+        "6": "red",
+        "7": "grey",
+        "8": "darkblue",
+        "9": "lightcoral",
+        "10": "purple",
+        "11": "black",
+        "12": "salmon",
+        "13": "darkgreen",
+        "14": "darkred",
+        "15": "lightblue",
+        "16": "darkpink",
+        "17": "lightgreen",
+        "18": "lightgrey",
+        "19": "white"
+    }
     var map = L.map("map").setView([48.833, 2.333], 5);
 
 
-    L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {}).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {}).addTo(map);
     var geojson = <?php echo json_encode($members, JSON_HEX_TAG); ?>;
-   
-     
+
+
 
     var cats = [];
     let tempCats = [];
@@ -60,30 +60,6 @@ $jsonArray = json_decode($json, true);
         }
         cat.people.push(user)
     }
-    // for (user of geojson) {
-    //     var cat;
-    //     let generationNumber = user.generationnumber
-    //     console.log(`La taille de cats ${cats.length}`)
-    //     if (tempCats.length == 0) {
-    //         cat = {
-    //             "people": [],
-    //             "id": "cat" + generationNumber,
-    //             "label": "Génération : " + generationNumber
-    //         }
-    //         cats.push(cat)
-    //         tempCats.push(generationNumber)
-    //     }
-    //     if (!tempCats.includes(generationNumber)) {
-    //         cat = {
-    //             "people": [],
-    //             "id": "cat" + generationNumber,
-    //             "label": "Génération : " + generationNumber
-    //         }
-    //         cats.push(cat)
-    //         tempCats.push(generationNumber)
-    //     }
-    // }
-
 
     function getCat(cats, cat) {
         for (var i = 0; i < cats.length; i++) {
@@ -93,84 +69,182 @@ $jsonArray = json_decode($json, true);
         }
         return;
     }
-    // for (var i = 0; i < geojson.length; i++) {
 
-    //     var cat = getCat(cats, geojson[i].generationnumber);
-    //     console.log(i)
-    //     if (cat === undefined) {
-    //         cat = {
-    //             "people": createUser(),
-    //             "id": "cat" + i,
-    //             "label": "Generation " + geojson[i].generationnumber
-    //         }
-    //         cats.push(cat);
-    //     }
-    //     // cat["people"].addData(geojson[i]);
-    // }
+    function getUserById(id, key) {
+        return $.ajax({
+            url: './scriptObject.php',
+            type: 'POST',
+            dataType: 'json',
+            async: !1,
+            data: {
+                [key]: id
+            },
+            error: function(data) {
+                // console.log(data);
+            }
 
-    // function getCat(cats, generationnumber) {
-    //     for (cat of cats) {
-    //         console.log(cat.label)
-    //         if (cat.label != "Generation " + generationnumber){
-    //         return;
-    //         }else{
-    //             return 1;
-    //         };
-    //     }
-    // }
+        });
+    }
+
     function createUser(geojson) {
 
         var generationNumber = geojson.generationnumber;
         //delete require.cache[require.resolve(`./test.json`)];
-
         var html = '<div class="globalMapMarkerPopup">';
         //Ceci sont les remarques</span>
 
+
+        //#region lastname
         if (geojson.lastname) {
             html += '<span class="rightInfo"><b> Nom :</b>' + geojson.lastname + '</span>';
         }
+        //#endregion
+
+        //#region firstname
         if (geojson.firstname) {
             html += '<span class="leftInfo"><b>Prénom :</b>' + geojson.firstname + '</span><br/>';
         }
-        if (geojson.birthplace) {
+        //#endregion
+
+        //#region birthplace
+        if (geojson.birthplace == null || geojson.birthplace == undefined || geojson.birthplace == "") {
+            html += '<span class="allLineInfo"><b>Lieu de naissance :</b> N/A </span><br/>';
+        } else {
             html += '<span class="allLineInfo"><b>Lieu de naissance :</b> ' + geojson.birthplace + '</span><br/>';
         }
-        if (geojson.birthplace) {
+        //#endregion
+
+        //#region birthdate
+        if (geojson.birthdate == null || geojson.birthdate == undefined || geojson.birthdate == "") {
+            html += '<span class="allLineInfo"><b>Date de naissance :</b> N/A </span><br/>';
+        } else {
             html += '<span class="allLineInfo"><b>Date de naissance :</b> ' + geojson.birthdate + '</span><br/>';
         }
-        if (geojson.parents) {
-            html += '<span class="rightInfo"><b> Mère :</b> mère </span>';
+        //#endregion birthplace
+
+
+        //#region 
+
+        //#endregion
+        if (geojson.parents == null) {
+            html += '<span class="rightInfo"><b>Mère et père :</b> N/A </span>';
+        } else {
+            let ajaxObj = getUserById(geojson.parents, "parents")
+            var ajaxResponse = ajaxObj.responseText;
+            let data = JSON.parse(ajaxResponse)
+            if (data == "false") {
+                html += `<span class="allLineInfo"><b> Parents :</b> N/A </span>`
+            } else {
+                for (let parent of data) {
+                    if (parent == false) continue
+                    if (parent.gender == "Homme") {
+                        html += `<span class="rightInfo"><b> Père :</b> ${parent.lastname.toUpperCase()} ${parent.firstname} </span>`
+                    } else {
+                        html += `<span class="rightInfo"><b> Mère :</b> ${parent.lastname.toUpperCase()} ${parent.firstname} </span>`
+
+                    }
+
+                }
+
+            }
+
         }
-        if (geojson.parents) {
-            html += '<span class="leftInfo"><b> Mère :</b> père </span>';
-        }
+
+        //#region gender
         if (geojson.gender) {
             html += '<span class="rightInfo"><b>Genre : </b>' + geojson.gender + '</span>';
         }
+        //#endregion
+
+
+        //#region generationnumber
         if (geojson.generationnumber) {
             html += '<span class="leftInfo"><b>Génération : </b> ' + geojson.generationnumber + '</span><br/>';
         }
-        if (geojson.weddingpartner) {
-            html += '<span class="rightInfo"><b>Mari/Femme :</b>' + geojson.weddingpartner + '</span>';
+        //#endregion
+
+        //#region weddingPartner
+        if (geojson.weddingpartner == null || geojson.weddingpartner == undefined || geojson.weddingpartner == "") {
+            html += '<span class="rightInfo"><b>Mari/Épouse :</b> N/A </span>';
+        } else {
+            let ajaxObj = getUserById(geojson.weddingpartner, "weddingpartner")
+            var ajaxResponse = ajaxObj.responseText;
+            let data = JSON.parse(ajaxResponse)
+            if (data.gender == "Femme")
+                html += '<span class="rightInfo"><b>Épouse :</b>' + data.lastname + " " + data.firstname + '</span>';
+            if (data.gender == "Homme")
+                html += '<span class="rightInfo"><b>Mari :</b>' + data.lastname + " " + data.firstname + '</span>';
         }
-        if (geojson.weddingdate) {
-            html += '<span class="leftInfo"><b>Date mariage : </b> ' + geojson.weddingdate + '</span><br/>';
+        //#endregion
+
+        //#region weddingDate
+        if (geojson.weddingdate == null || geojson.weddingdate == undefined || geojson.weddingdate == "") {
+            html += '<span class="rightInfo"><b>Date mariage : </b>N/A</span><br/>';
+        } else {
+            html += `<span class="rightInfo"><b>Date mariage : </b>${geojson.weddingdate} </span><br/>`;
+
         }
-        if (geojson.weddingplace) {
+        //#endregion
+
+        //#region weddingplace
+        if (geojson.weddingplace == null || geojson.weddingplace == undefined || geojson.weddingplace == "") {
+            html += '<span class="allLineInfo"><b>Lieu mariage : </b>N/A</span><br/>';
+        } else {
             html += '<span class="allLineInfo"><b>Lieu mariage : </b>' + geojson.weddingplace + '</span><br/>';
+
         }
-        if (geojson.children) {
-            html += '<span class="allLineInfo"><b>Enfants : </b> ' + geojson.children + '</span><br/>';
+        //#endregion
+        if (geojson.children != null || geojson.children != undefined || geojson.children != "") {
+            let ajaxObj = getUserById(geojson.children, "children")
+            var ajaxResponse = ajaxObj.responseText;
+            let data = JSON.parse(ajaxResponse)
+            if (data == false) {
+                html += `<span class="allLineInfo"><b>Enfants : </b>N/A </span><br/>`;
+            } else {
+                let childrenArray = []
+                for (let child of data) {
+                    if (child == false) continue
+                    // if(child == undefined || child == "" || child == "null")
+                    childrenArray.push(`${child.lastname.toUpperCase()} ${child.firstname}`)
+                }
+                if (childrenArray.lengthf == 0) {
+                    html += `<span class="allLineInfo"><b>Enfants : </b>NA</span><br/>`;
+                } else {
+                    let children = childrenArray.join(", ")
+                    html += `<span class="allLineInfo"><b>Enfants : </b>${children} </span><br/>`;
+                }
+
+            }
+        } else {
+            html += '<span class="allLineInfo"><b>Enfants : </b>N/A </span><br/>';
         }
-        if (geojson.deathdate) {
+
+        //#region deathdate
+        if (geojson.deathdate == null || geojson.deathdate == undefined || geojson.deathdate == "") {
+            html += '<span class="rightInfo"><b>Date mort : </b> N/A </span>';
+
+        } else {
             html += '<span class="rightInfo"><b>Date mort : </b> ' + geojson.deathdate + '</span>';
+
         }
-        if (geojson.deathplace) {
+        //#endregion
+
+        //#region deathplace
+        if (geojson.deathplace == null || geojson.deathplace == undefined || geojson.deathplace == "") {
+            html += '<span class="leftInfo"><b>Lieu mort : </b> N/A </span><br/>';
+        } else {
             html += '<span class="leftInfo"><b>Lieu mort : </b>' + geojson.deathplace + '</span><br/>';
         }
-        if (geojson.remarks) {
+        //#endregion
+
+        //#region remarks
+        if (geojson.remarks == null || geojson.remarks == undefined || geojson.remarks == "") {
+            html += '<span class="allLineInfo"><b>Remarques : </b> N/A </span>';
+        } else {
             html += '<span class="allLineInfo"><b>Remarques : </b>' + geojson.remarks + '</span>';
         }
+        //#endregion
+
         html += "</div>"
         return html;
     }
@@ -209,8 +283,8 @@ $jsonArray = json_decode($json, true);
                 break;
             }
         }
-       
-        
+
+
         if (this.checked) {
             for (let user of selectedCat.people) {
                 var finalIcon = L.icon({
@@ -226,21 +300,27 @@ $jsonArray = json_decode($json, true);
                 let contactDetails = user.contactdetails;
                 let lat = parseFloat(contactDetails.split(",")[0]);
                 let long = parseFloat(contactDetails.split(",")[1])
-                let marker = L.marker([lat, long], { icon : finalIcon }).addTo(map).bindPopup(html,{maxWidth: "auto"});
-                arrayOfMarker.push({"user":user,"marker": marker})
+                let marker = L.marker([lat, long], {
+                    icon: finalIcon
+                }).addTo(map).bindPopup(html, {
+                    maxWidth: "auto"
+                });
+                arrayOfMarker.push({
+                    "user": user,
+                    "marker": marker
+                })
             }
-        } else { 
+        } else {
             for (marker of arrayOfMarker) {
-                console.log(selectedCat.label.split("Génération : ")[1]);
-                console.log(marker.user.generationnumber)
-                if(marker.user.generationnumber == selectedCat.label.split("Génération : ")[1]){
-                    marker.marker.remove();     
-                    
+                // console.log(selectedCat.label.split("Génération : ")[1]);
+                // console.log(marker.user.generationnumber)
+                if (marker.user.generationnumber == selectedCat.label.split("Génération : ")[1]) {
+                    marker.marker.remove();
+
                 }
             }
         }
     }
-    
 </script>
 <style>
     .command {
@@ -252,19 +332,22 @@ $jsonArray = json_decode($json, true);
         border-radius: 5px;
         min-width: 200px;
     }
-    .catForm{
+
+    .catForm {
         display: flex;
         flex-direction: row;
         align-items: center;
         padding: 2px;
     }
-    .catForm input{
+
+    .catForm input {
         width: auto;
     }
-    .catForm label{
+
+    .catForm label {
         margin-left: 1%;
     }
-    </style>
+</style>
 </body>
 
 </html>

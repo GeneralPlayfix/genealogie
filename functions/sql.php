@@ -46,6 +46,7 @@ function getMemberById($dbh, $id){
     $query->execute(array($id));
     return $result = $query->fetch();
 }
+
 function updateMemberNewInformations($dbh, $id, $parents, $weddingPartner, $children, $final = 0){
     $sql = $dbh->prepare("UPDATE membres SET parents = ?, weddingpartner = ?, children = ?, final = ? WHERE id = ?");
     $sql -> execute(array($parents, $weddingPartner, $children,$final,$id));
@@ -56,8 +57,8 @@ function getAllMembersExceptThisId($dbh, $id){
     return $result = $query->fetchAll();
 }
 function getInformationsByWords($dbh, $search){
-    $query = $dbh->prepare("SELECT * FROM membres WHERE UPPER(firstname) LIKE UPPER(?) OR UPPER(lastname) LIKE UPPER(?) OR UPPER(birthplace) LIKE UPPER(?) OR UPPER(weddingplace) LIKE UPPER(?) OR UPPER(deathplace) LIKE UPPER(?) OR UPPER(weddingpartner) LIKE UPPER(?) OR UPPER(children) LIKE UPPER(?) OR UPPER(parents) LIKE UPPER(?) OR UPPER(remarks) LIKE UPPER(?)");
-	$query -> execute(array($search, $search, $search, $search, $search, $search, $search, $search, $search));
+    $query = $dbh->prepare("SELECT * FROM membres WHERE UPPER(id) LIKE UPPER(?) OR UPPER(firstname) LIKE UPPER(?) OR UPPER(lastname) LIKE UPPER(?) OR UPPER(birthplace) LIKE UPPER(?) OR UPPER(weddingplace) LIKE UPPER(?) OR UPPER(deathplace) LIKE UPPER(?) OR UPPER(weddingpartner) LIKE UPPER(?) OR UPPER(children) LIKE UPPER(?) OR UPPER(parents) LIKE UPPER(?) OR UPPER(remarks) LIKE UPPER(?)");
+	$query -> execute(array($search, $search , $search, $search, $search, $search, $search, $search, $search, $search));
 	return $members = $query->fetchAll();
 }
 

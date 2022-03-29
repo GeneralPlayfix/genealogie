@@ -38,7 +38,6 @@ if (isset($_POST['moreInformations'])) {
         $children = "";
         if (!empty($_POST['children'])) {
             $tempChildren = $_POST['children'];
-            $parents = "";
             foreach ($tempChildren as $temp) {
                 if ($children == "") {
                     $children = $temp;
@@ -59,7 +58,12 @@ if (isset($_POST['moreInformations'])) {
                 $weddingPartner = $memberInformations['weddingpartner'];
             }
         }
-        updateMemberNewInformations($dbh, $memberId, $parents, $weddingPartner, $children);
+        echo $parents, $weddingPartner, $children;
+        $final = 0; 
+        if(!empty($parents) && !empty($weddingPartner)&& !empty($children)){
+            $final = 1;
+        }
+        updateMemberNewInformations($dbh, $memberId, $parents, $weddingPartner, $children, $final);
         header("Location:addMoreInformations.php");
     }
 }
@@ -76,11 +80,9 @@ if(isset($_POST['moreInformationsNone'])){
     <thead>
         <tr>
             <th scope="col">ID</th>
-            <th scope="col">génération</th>
             <th scope="col">Nom</th>
             <th scope="col">Prénom</th>
             <th scope="col">Date naissance</th>
-            <th scope="col">Date décès</th>
             <th scope="col">Ajouter</th>
         </tr>
     </thead>
@@ -91,11 +93,9 @@ if(isset($_POST['moreInformationsNone'])){
         ?>
             <tr>
                 <th scope="row"><?= $member['id'] ?></th>
-                <td><?= $member['generationnumber'] ?></td>
                 <td><?php echo ($member['lastname'] !== "") ? $member['lastname'] : "N/A" ?></td>
                 <td><?php echo ($member['firstname'] !== "") ? $member['firstname'] : "N/A" ?></td>
                 <td><?php echo ($member['birthdate'] !== "") ? $member['birthdate'] : "N/A" ?></td>
-                <td><?php echo ($member['deathdate'] !== "") ? $member['deathdate'] : "N/A" ?></td>
                 <td class="modify"><a class="btn btn-outline-primary button" data-modal="modal<?= $member['id'] ?>"><i class="fas fa-plus-circle"></i></a></td>
             </tr>
             <div id="modal<?= $member['id'] ?>" class="modal">
